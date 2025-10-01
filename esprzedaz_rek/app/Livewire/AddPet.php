@@ -34,15 +34,15 @@ class AddPet extends Component {
 
         // Quick validation
         if (!is_numeric($this->petId)) {
-            $errorMessage = 'Pet ID must be a number';
+            $this->errorMessage = 'Pet ID must be a number';
             return;
         }
         if (!is_null($this->petCategoryId) && !is_numeric($this->petCategoryId)) {
-            $errorMessage = 'Pet category ID must be a number';
+            $this->errorMessage = 'Pet category ID must be a number';
             return;
         }
         if (!is_null($this->petTagId) && !is_numeric($this->petTagId)) {
-            $errorMessage = 'Pet tag ID must be a number';
+            $this->errorMessage = 'Pet tag ID must be a number';
             return;
         }
 
@@ -70,11 +70,10 @@ class AddPet extends Component {
         ['Content-Type' => 'application/json', 'Accept' => 'application/json'],
         json_encode($data));
 
-    //     $response = $client->request('POST', 'https://petstore.swagger.io/v2/pet', ['Content-Type' => 'application/json', 'Accept' => 'application/json'],
-    // json_encode($data));
+
         $response = $client->send($request);
 
-        
+
     }
 
     public function render() {
