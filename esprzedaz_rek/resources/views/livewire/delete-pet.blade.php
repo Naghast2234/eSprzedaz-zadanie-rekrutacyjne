@@ -4,12 +4,12 @@
     <div wire:show="showModal">
         <div class="p-4">
             <h1>Pet ID (Has to be entered manually) (Has to be a number)</h1>
-            <textarea class="bg-[grey]" wire:model="petId"></textarea>
+            <input type="text" class="bg-[grey]" wire:model="petId"></input>
         </div>
         
         <div>
-            <h1 class="color-[red]">{{ $errorMessage }}</h1>
+            <h1>{{ $message }}</h1>
         </div>
-        <button wire:click="submit">Delete a pet of chosen ID!</button>
+        <button wire:click="submit" class="bg-amber-500 border border-amber-400 rounded-2xl">Delete a pet of chosen ID!</button>
     </div>
 </div>

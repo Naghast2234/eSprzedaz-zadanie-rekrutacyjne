@@ -5,39 +5,39 @@
     <div wire:show="showModal">
         <div class="p-4">
             <h1>Pet ID (Has to be entered manually) (Has to be a number)</h1>
-            <textarea class="bg-[grey]" wire:model="petId"></textarea>
+            <input type="text" class="bg-[grey]" wire:model="petId"></input>
         </div>
         <div class="p-4">
             <h1>Pet category (Contains ID and name of it)</h1>
             <div>
                 <div>
-                    <h1>ID</h1>
-                    <textarea class="bg-[grey]" wire:model="petCategoryId"></textarea>
+                    <h1>Category ID</h1>
+                    <input type="text" class="bg-[grey]" wire:model="petCategoryId"></input>
                 </div>
                 <div>
-                    <h1>Name</h1>
-                    <textarea class="bg-[grey]" wire:model="petCategoryName"></textarea>
+                    <h1>Category name</h1>
+                    <input type="text" class="bg-[grey]" wire:model="petCategoryName"></input>
                 </div>
             </div>
         </div>
         <div class="p-4">
             <h1>Pet's name</h1>
-            <textarea class="bg-[grey]" wire:model="petName"></textarea>
+            <input type="text" class="bg-[grey]" wire:model="petName"></input>
         </div>
         <div class="p-4">
             <h1>Pet photo URL</h1>
-            <textarea class="bg-[grey]" wire:model="petPhotoUrl"></textarea>
+            <input type="text" class="bg-[grey]" wire:model="petPhotoUrl"></input>
         </div>
         <div class="p-4">
             <h1>Pet tags (For now can just add one... Will add ability to add more later)</h1>
             <div>
                 <div>
-                    <h1>ID</h1>
-                    <textarea class="bg-[grey]" wire:model="petTagId"></textarea>
+                    <h1>Tag ID</h1>
+                    <input type="text" class="bg-[grey]" wire:model="petTagId"></input>
                 </div>
                 <div>
-                    <h1>Name</h1>
-                    <textarea class="bg-[grey]" wire:model="petTagName"></textarea>
+                    <h1>Tag name</h1>
+                    <input type="text" class="bg-[grey]" wire:model="petTagName"></input>
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
             </select>
         </div>
         <div>
-            <h1 class="color-[red]">{{ $errorMessage }}</h1>
+            <h1>{{ $message }}</h1>
         </div>
         <button wire:click="submit" class="bg-amber-500 border border-amber-400 rounded-2xl">Submit the pet!</button>
     </div>

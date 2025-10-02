@@ -13,9 +13,9 @@ class DownloadPet extends Component
 
     public $showModal = false;
     
-    public $petId = null;
+    public $petId = '';
 
-    public $errorMessage = '';
+    public $message = '';
 
     public function render()
     {
@@ -23,12 +23,13 @@ class DownloadPet extends Component
     }
 
     public function submit() {
-        $client = new Client();
-
-        if (!is_numeric($this->petId)) {
-            $this->errorMessage = 'Pet ID must be a number';
+        $this->message = '';
+        
+        if($this->validateFields()) {
             return;
         }
+
+        $client = new Client();
 
         $request = new Request('GET',
         "https://petstore.swagger.io/v2/pet/$this->petId",
@@ -38,16 +39,29 @@ class DownloadPet extends Component
         try {
             $response = $client->send($request);
 
-            // $body = json_decode($response->getBody()->getContents());
-
             $content = $response->getBody()->getContents();
 
             Storage::disk('local')->put("pet_data.txt", $content);
             return Storage::download("pet_data.txt");
-            // dd($body);
         } catch(GuzzleException $e) {
-            $this->errorMessage = "The pet did not exist";
+            $this->message = "The pet did not exist";
         }
+
+        $this->message = 'Pet downloaded successfully! (I think.)';
+    }
+
+    private function validateFields() {
+        
+        if (is_null($this->petId) || $this->petId == '') {
+            $this->message = 'Pet ID must not be empty';
+            return true;
+        }
+        if (!is_numeric($this->petId)) {
+            $this->message = 'Pet ID must be a number';
+            return true;
+        }
+        
+        return false; // This essentially means no error was found.
     }
 
     public function toggleModal() {

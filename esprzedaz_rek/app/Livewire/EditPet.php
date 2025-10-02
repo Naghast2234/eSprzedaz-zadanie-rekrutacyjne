@@ -10,20 +10,20 @@ use Livewire\Component;
 class EditPet extends Component {
     public $showModal = false;
     
-    public $petId = null;
-    public $petCategoryId = null;
+    public $petId = '';
+    public $petCategoryId = '';
     public $petCategoryName = '';
 
-    public $petName = ''; // This is a string
-    public $petPhotoUrl = ''; // This is also a string, but also a link that is SUPPOSED to point to an image.
+    public $petName = '';
+    public $petPhotoUrl = '';
 
-    public $petTagId = null; // Array, same structure as category;
+    public $petTagId = '';
     public $petTagName = '';
 
 
-    public $petStatus = 'available'; // String but technically from 3 options: 'available', 'pending', 'sold'.
+    public $petStatus = 'available';
 
-    public $errorMessage = '';
+    public $message = '';
 
 
     public function toggleModal() {
@@ -31,21 +31,13 @@ class EditPet extends Component {
     }
 
     public function submit() {
-        $client = new Client();
+        $this->message = '';
 
-        // Quick validation
-        if (!is_numeric($this->petId)) {
-            $this->errorMessage = 'Pet ID must be a number';
+        if ($this->validateFields()) {
             return;
         }
-        if (!is_null($this->petCategoryId) && !is_numeric($this->petCategoryId)) {
-            $this->errorMessage = 'Pet category ID must be a number';
-            return;
-        }
-        if (!is_null($this->petTagId) && !is_numeric($this->petTagId)) {
-            $this->errorMessage = 'Pet tag ID must be a number';
-            return;
-        }
+
+        $client = new Client();
 
         $data = [
             'id' => intval($this->petId),
@@ -77,15 +69,50 @@ class EditPet extends Component {
         } catch (GuzzleException $e) {
             $code = $e->getCode();
             if ($code == 400) {
-                $this->errorMessage = 'Invalid ID';
+                $this->message = 'Invalid ID';
             } else if ($code == 404) {
-                $this->errorMessage = 'Pet not found';
+                $this->message = 'Pet not found';
             } else {
-                $this->errorMessage = $e->getMessage();
+                $this->message = $e->getMessage();
             }
         }
 
+        $this->message = 'Pet edited successfully!';
 
+    }
+
+    private function validateFields() {
+        
+        if (is_null($this->petId) || $this->petId == '') {
+            $this->message = 'Pet ID must not be empty';
+            return true;
+        }
+        if (!is_numeric($this->petId)) {
+            $this->message = 'Pet ID must be a number';
+            return true;
+        }
+        if (!(is_null($this->petCategoryId) || $this->petCategoryId == '') && !is_numeric($this->petCategoryId)) {
+            $this->message = 'Pet category ID must be a number';
+            return true;
+        }
+        if (!(is_null($this->petTagId) || $this->petTagId == '') && !is_numeric($this->petTagId)) {
+            $this->message = 'Pet tag ID must be a number';
+            return true;
+        }
+
+
+        if ($this->petCategoryId != '' && $this->petCategoryName == '') {
+            $this->message = 'Pet category name must be filled if pet category ID is filled as well';
+            return true;
+        }
+        if ($this->petTagId != '' && $this->petTagName == '') {
+            $this->message = 'Pet tag Name must be filled if pet tag ID is filled as well';
+            return true;
+        }
+        
+
+
+        return false; // This essentially means no error was found.
     }
 
     public function render() {

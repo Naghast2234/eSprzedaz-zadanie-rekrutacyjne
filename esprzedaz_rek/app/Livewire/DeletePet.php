@@ -14,7 +14,7 @@ class DeletePet extends Component
     
     public $petId = null;
 
-    public $errorMessage = '';
+    public $message = '';
 
 
     public function toggleModal() {
@@ -22,12 +22,13 @@ class DeletePet extends Component
     }
 
     public function submit() {
-        $client = new Client();
-
-        if (!is_numeric($this->petId)) {
-            $this->errorMessage = 'Pet ID must be a number';
+        $this->message = '';
+        
+        if ($this->validateFields()) {
             return;
         }
+
+        $client = new Client();
 
         $request = new Request('DELETE',
         "https://petstore.swagger.io/v2/pet/$this->petId",
@@ -37,8 +38,24 @@ class DeletePet extends Component
         try {
             $response = $client->send($request);
         } catch(GuzzleException $e) {
-            $this->errorMessage = "The pet already did not exist";
+            $this->message = "The pet already did not exist";
         }
+
+        $this->message = 'Pet deleted successfully!';
+    }
+
+    private function validateFields() {
+        
+        if (is_null($this->petId) || $this->petId == '') {
+            $this->message = 'Pet ID must not be empty';
+            return true;
+        }
+        if (!is_numeric($this->petId)) {
+            $this->message = 'Pet ID must be a number';
+            return true;
+        }
+        
+        return false; // This essentially means no error was found.
     }
 
     public function render()
